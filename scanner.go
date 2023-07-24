@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 /*
@@ -35,21 +36,43 @@ import (
 ...
 }
 */
+
 type Advisory struct {
-	SchemaVersion string
-	Id            string
-	Aliases       []string
-	Summary       string
-	Affected      []Impact
-}
-
-type Impact struct {
-	Package Package
-}
-
-type Package struct {
-	Ecosystem string
-	Name      string
+	SchemaVersion string    `json:"schema_version"`
+	Id            string    `json:"id"`
+	Modified      time.Time `json:"modified"`
+	Published     time.Time `json:"published"`
+	Aliases       []string  `json:"aliases"`
+	Summary       string    `json:"summary"`
+	Details       string    `json:"details"`
+	Severity      []struct {
+		Type  string `json:"type"`
+		Score string `json:"score"`
+	} `json:"severity"`
+	Affected []struct {
+		Package struct {
+			Ecosystem string `json:"ecosystem"`
+			Name      string `json:"name"`
+		} `json:"package"`
+		Ranges []struct {
+			Type   string `json:"type"`
+			Events []struct {
+				Introduced   string `json:"introduced,omitempty"`
+				LastAffected string `json:"last_affected,omitempty"`
+			} `json:"events"`
+		} `json:"ranges"`
+	} `json:"affected"`
+	References []struct {
+		Type string `json:"type"`
+		Url  string `json:"url"`
+	} `json:"references"`
+	DatabaseSpecific struct {
+		CweIds           []string    `json:"cwe_ids"`
+		Severity         string      `json:"severity"`
+		GithubReviewed   bool        `json:"github_reviewed"`
+		GithubReviewedAt time.Time   `json:"github_reviewed_at"`
+		NvdPublishedAt   interface{} `json:"nvd_published_at"`
+	} `json:"database_specific"`
 }
 
 func main() {
