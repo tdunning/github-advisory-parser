@@ -126,7 +126,7 @@ func main() {
 			name = r.Affected[0].Package.Name
 		}
 		_, err = output.WriteString(fmt.Sprintf("%s,%s,%s,%s,%s\n",
-			r.Id, r.Aliases, strconv.Quote(r.Summary), strconv.Quote(eco), strconv.Quote(name)))
+			r.Id, strconv.Quote(fmt.Sprintf("%s", r.Aliases)), strconv.Quote(r.Summary), strconv.Quote(eco), strconv.Quote(name)))
 		return nil
 	})
 	if err != nil {
