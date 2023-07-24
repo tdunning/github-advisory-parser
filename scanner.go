@@ -95,7 +95,13 @@ func main() {
 		if err != nil {
 			log.Printf("can't parse file %s (%s)", path, err.Error())
 		}
-		_, err = output.WriteString(fmt.Sprintf("%s,%s,%s,%s,%s\n", r.Id, r.Aliases, r.Summary, r.Affected[0].Package.Ecosystem, r.Affected[0].Package.Name))
+		eco := ""
+		name := ""
+		if len(r.Affected) > 0 {
+			eco = r.Affected[0].Package.Ecosystem
+			name = r.Affected[0].Package.Name
+		}
+		_, err = output.WriteString(fmt.Sprintf("%s,%s,%s,%s,%s\n", r.Id, r.Aliases, r.Summary, eco, name))
 		return nil
 	})
 	if err != nil {
