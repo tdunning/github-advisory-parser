@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 )
 
@@ -124,7 +125,8 @@ func main() {
 			eco = r.Affected[0].Package.Ecosystem
 			name = r.Affected[0].Package.Name
 		}
-		_, err = output.WriteString(fmt.Sprintf("%s,%s,%s,%s,%s\n", r.Id, r.Aliases, r.Summary, eco, name))
+		_, err = output.WriteString(fmt.Sprintf("%s,%s,\"%s\",\"%s\",\"%s\"\n",
+			r.Id, r.Aliases, strconv.Quote(r.Summary), strconv.Quote(eco), strconv.Quote(name)))
 		return nil
 	})
 	if err != nil {
