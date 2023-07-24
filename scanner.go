@@ -40,6 +40,16 @@ type Advisory struct {
 	Id            string
 	Aliases       []string
 	Summary       string
+	Affected      []Impact
+}
+
+type Impact struct {
+	Package Package
+}
+
+type Package struct {
+	Ecosystem string
+	Name      string
 }
 
 func main() {
@@ -54,7 +64,7 @@ func main() {
 	defer func(output *os.File) {
 		_ = output.Close()
 	}(output)
-	_, err = output.WriteString("Id,Aliases,Summary\n")
+	_, err = output.WriteString("Id,Aliases,Summary,Ecosystem,Name\n")
 	if err != nil {
 		log.Fatalf("can't write to %s (%s)", out, err.Error())
 	}
@@ -85,7 +95,7 @@ func main() {
 		if err != nil {
 			log.Printf("can't parse file %s (%s)", path, err.Error())
 		}
-		_, err = output.WriteString(fmt.Sprintf("%s,%s,%s\n", r.Id, r.Aliases, r.Summary))
+		_, err = output.WriteString(fmt.Sprintf("%s,%s,%s,%s,%s\n", r.Id, r.Aliases, r.Summary, r.Affected[0].Package.Ecosystem, r.Affected[0].Package.Name))
 		return nil
 	})
 	if err != nil {
